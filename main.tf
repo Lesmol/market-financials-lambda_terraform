@@ -1,21 +1,28 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.92"
-    }
-  }
+resource "aws_ecr_repository" "market_financials" {
+  name = "market-financials"
+  image_tag_mutability = "MUTABLE"
+  force_delete = true
 
-  required_version = ">= 1.2"
-
-  backend "s3" {
-    bucket         = "BUCKET_NAME"
-    key            = "KEY_NAME/terraform.tfstate"
-    region         = "af-south-1"
-    encrypt        = true
+  image_scanning_configuration {
+    scan_on_push = true
   }
 }
 
-provider "aws" {
-  region = var.region
+resource "aws_ecr_lifecycle_policy" "market_financials_lifecycle_policy" {
+  repository = aws_ecr_repository.market_financials.name
+
+  policy = jsonencode({
+    rules = [{
+      rulePriority = 1
+      description  = "Keep last 5 images"
+      selection = {
+        tagStatus   = "any"
+        countType   = "imageCountMoreThan"
+        countNumber = 5
+      }
+      action = {
+        type = "expire"
+      }
+    }]
+  })
 }
