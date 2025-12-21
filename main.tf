@@ -46,3 +46,14 @@ resource "aws_iam_role_policy_attachment" "market_financials_iam_policy" {
   role = aws_iam_role.market_financials_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+
+resource "aws_lambda_function" "market_financials_function" {
+  function_name = "market_financials_function"
+  package_type = "Image"
+  image_uri = "${aws_ecr_repository.market_financials.repository_url}:latest"
+ role = aws_iam_role.market_financials_role
+  memory_size = 512
+  timeout = 30
+
+  architectures = [ "x86_64" ]
+}
