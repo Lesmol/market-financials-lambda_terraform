@@ -6,6 +6,10 @@ resource "aws_ecr_repository" "market_financials" {
   image_scanning_configuration {
     scan_on_push = true
   }
+
+  tags = {
+    project = "market-financials"
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "market_financials_lifecycle_policy" {
@@ -42,50 +46,6 @@ resource "aws_iam_role" "market_financials_role" {
   })
 }
 
-resource "aws_iam_role_policy" "lambda_ecr_pull" {
-  role = aws_iam_role.market_financials_role.name
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "ecr:BatchGetImage",
-          "ecr:GetDownloadUrlForLayer"
-        ]
-        Effect   = "Allow"
-        Resource = "arn:aws:ecr:af-south-1:602563225957:repository/market-financials"
-      }
-    ]
-  })
-}
-
-resource "aws_ecr_repository_policy" "lambda_ecr_policy" {
-  repository = aws_ecr_repository.market_financials.name
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Sid    = "AllowLambdaServiceToPull",
-        Effect = "Allow",
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        },
-        Action = [
-          "ecr:BatchGetImage",
-          "ecr:GetDownloadUrlForLayer"
-        ]
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "market_financials_iam_policy" {
-  role = aws_iam_role.market_financials_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
 resource "aws_lambda_function" "market_financials_function" {
   function_name = "market_financials_function"
   package_type = "Image"
@@ -95,8 +55,4 @@ resource "aws_lambda_function" "market_financials_function" {
   timeout = 30
 
   architectures = [ "x86_64" ]
-
-  depends_on = [
-    aws_ecr_repository_policy.lambda_ecr_policy,
-  ]
 }
