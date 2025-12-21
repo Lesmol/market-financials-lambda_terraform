@@ -97,6 +97,6 @@ resource "aws_lambda_function" "market_financials_function" {
   architectures = [ "x86_64" ]
 
   depends_on = [
-    aws_iam_role_policy.lambda_ecr_policy,
+    aws_ecr_repository_policy.lambda_ecr_policy,
   ]
 }
