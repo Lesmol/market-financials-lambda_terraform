@@ -47,7 +47,7 @@ resource "aws_apigatewayv2_api" "market_financials_gw" {
 
 resource "aws_apigatewayv2_stage" "market_financials_gw_stage" {
   api_id = aws_apigatewayv2_api.market_financials_gw.id
-  name = "market_financials_gw_stage"
+  name = "prod"
   auto_deploy = true
 
   access_log_settings {
