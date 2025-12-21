@@ -54,3 +54,6 @@ When running the workflow manually, you must select the job to run via the `job_
 * **Terraform Destroy Plan/Apply**: Handles the safe destruction of infrastructure when selected.
 
 The pipeline uses an S3 backend (`market-financials-lambda-terrafom-state`) to store the Terraform state file securely.
+
+## 🔨Tools used:
+[![My Skills](https://skillicons.dev/icons?i=aws,terraform,git,githubactions&perline=6)](https://skillicons.dev)
