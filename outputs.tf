@@ -9,6 +9,6 @@ output "api_endpoint" {
 }
 
 output "base_url" {
-  value = aws_apigatewayv2_stage.lambda.invoke_url
+  value = aws_apigatewayv2_stage.market_financials_gw_stage.invoke_url
   description = "Base URL for API Gateway stage"
 }
