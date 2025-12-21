@@ -51,7 +51,7 @@ resource "aws_lambda_function" "market_financials_function" {
   function_name = "market_financials_function"
   package_type = "Image"
   image_uri = "${aws_ecr_repository.market_financials.repository_url}:latest"
- role = aws_iam_role.market_financials_role
+  role = aws_iam_role.market_financials_role.arn
   memory_size = 512
   timeout = 30
 
