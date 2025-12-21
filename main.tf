@@ -79,4 +79,9 @@ resource "aws_lambda_function" "market_financials_function" {
   timeout = 30
 
   architectures = [ "x86_64" ]
+
+  depends_on = [
+    aws_iam_role_policy.lambda_ecr_pull,
+    aws_iam_role_policy_attachment.market_financials_iam_policy
+  ]
 }
