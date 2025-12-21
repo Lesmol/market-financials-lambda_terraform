@@ -42,6 +42,29 @@ resource "aws_iam_role" "market_financials_role" {
   })
 }
 
+resource "aws_iam_role_policy" "lambda_ecr_pull" {
+  role = aws_iam_role.market_financials_role.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:ecr:af-south-1:602563225957:repository/market-financials"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_ecr_read" {
+  role = aws_iam_role.market_financials_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+
 resource "aws_iam_role_policy_attachment" "market_financials_iam_policy" {
   role = aws_iam_role.market_financials_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
