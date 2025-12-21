@@ -42,5 +42,5 @@ resource "aws_lambda_permission" "market_financials_function_permission" {
   function_name = aws_lambda_function.market_financials_function.function_name
   principal = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}"
+  source_arn = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/*/*"
 }
