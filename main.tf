@@ -21,6 +21,10 @@ resource "aws_lambda_function" "market_financials_function" {
   timeout = 30
 
   architectures = [ "x86_64" ]
+  
+  lifecycle {
+    ignore_changes = [ image_uri ]
+  }
 
   tags = {
     project = "market-financials"
