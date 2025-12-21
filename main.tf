@@ -44,6 +44,10 @@ resource "aws_iam_role" "market_financials_role" {
       }
     }]
   })
+
+  tags = {
+    project = "market-financials"
+  }
 }
 
 resource "aws_lambda_function" "market_financials_function" {
@@ -55,4 +59,17 @@ resource "aws_lambda_function" "market_financials_function" {
   timeout = 30
 
   architectures = [ "x86_64" ]
+
+  tags = {
+    project = "market-financials"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "market_financials_cloudwatch" {
+  name              = "/aws/lambda/market_financials"
+  retention_in_days = 7
+
+  tags = {
+    project = "market-financials"
+  }
 }
