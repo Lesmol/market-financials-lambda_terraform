@@ -12,44 +12,6 @@ resource "aws_ecr_repository" "market_financials" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "market_financials_lifecycle_policy" {
-  repository = aws_ecr_repository.market_financials.name
-
-  policy = jsonencode({
-    rules = [{
-      rulePriority = 1
-      description  = "Keep last 5 images"
-      selection = {
-        tagStatus   = "any"
-        countType   = "imageCountMoreThan"
-        countNumber = 5
-      }
-      action = {
-        type = "expire"
-      }
-    }]
-  })
-}
-
-resource "aws_iam_role" "market_financials_role" {
-  name = "market_financials_role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      }
-    }]
-  })
-
-  tags = {
-    project = "market-financials"
-  }
-}
-
 resource "aws_lambda_function" "market_financials_function" {
   function_name = "market_financials_function"
   package_type = "Image"
@@ -72,4 +34,55 @@ resource "aws_cloudwatch_log_group" "market_financials_cloudwatch" {
   tags = {
     project = "market-financials"
   }
+}
+
+resource "aws_apigatewayv2_api" "market_financials_gw" {
+  name = "market_financials_gw"
+  protocol_type = "HTTP"
+
+  tags = {
+    project = "market-financials"
+  }
+}
+
+resource "aws_apigatewayv2_stage" "market_financials_gw_stage" {
+  api_id = aws_apigatewayv2_api.market_financials_gw.id
+  name = "market_financials_gw_stage"
+  auto_deploy = true
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.market_financials_cloudwatch.arn
+    format = jsonencode({
+      requestId               = "$context.requestId"
+      sourceIp                = "$context.identity.sourceIp"
+      requestTime             = "$context.requestTime"
+      protocol                = "$context.protocol"
+      httpMethod              = "$context.httpMethod"
+      resourcePath            = "$context.resourcePath"
+      routeKey                = "$context.routeKey"
+      status                  = "$context.status"
+      responseLength          = "$context.responseLength"
+      integrationErrorMessage = "$context.integrationErrorMessage"
+      }
+    )
+  }
+
+  tags = {
+    project = "market-financials"
+  }
+}
+
+resource "aws_apigatewayv2_integration" "market_financials_gw_integration" {
+  api_id = aws_apigatewayv2_api.market_financials_gw.id
+
+  integration_uri = aws_lambda_function.market_financials_function.invoke_arn
+  integration_type = "AWS_PROXY"
+  integration_method = "POST"
+}
+
+resource "aws_apigatewayv2_route" "market_financials_gw_route" {
+  api_id = aws_apigatewayv2_api.market_financials_gw.id
+  
+  route_key = "GET /market-financials"
+  target = "integrations/${aws_apigatewayv2_integration.market_financials_gw_integration.id}"
 }
