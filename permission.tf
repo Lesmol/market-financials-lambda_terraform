@@ -55,14 +55,14 @@ resource "aws_iam_role" "market_financials_role" {
   }
 }
 
-resource "aws_lambda_permission" "market_financials_function_permission" {
-  statement_id = "AllowExecutionFromAPIGateway"
-  action = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.market_financials_function.function_name
-  principal = "apigateway.amazonaws.com"
+# resource "aws_lambda_permission" "market_financials_function_permission" {
+#   statement_id = "AllowExecutionFromAPIGateway"
+#   action = "lambda:InvokeFunction"
+#   function_name = aws_lambda_function.market_financials_function.function_name
+#   principal = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/*/*"
-}
+#   source_arn = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/*/*"
+# }
 
 # resource "aws_lambda_permission" "auth_invoke_permission" {
 #   statement_id  = "AllowExecutionFromAPIGatewayAuthorizer"
