@@ -87,6 +87,6 @@ resource "aws_apigatewayv2_integration" "market_financials_gw_integration" {
 resource "aws_apigatewayv2_route" "market_financials_gw_route" {
   api_id = aws_apigatewayv2_api.market_financials_gw.id
   
-  route_key = "GET /market-financials"
+  route_key = "POST /market-financials"
   target = "integrations/${aws_apigatewayv2_integration.market_financials_gw_integration.id}"
 }
