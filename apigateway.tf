@@ -56,7 +56,7 @@ resource "aws_apigatewayv2_route" "market_financials_gw_route" {
 
 resource "aws_apigatewayv2_authorizer" "auth" {
   name = "MarketFinancailsAuthorizer"
-  api_id = aws_lambda_function.market_financials_auth_function.id
+  api_id = aws_apigatewayv2_api.market_financials_gw.id
 
   authorizer_type = "REQUEST"
   authorizer_uri = aws_lambda_function.market_financials_auth_function.invoke_arn
