@@ -98,3 +98,8 @@ resource "aws_iam_role_policy_attachment" "market_financials_attach_dynamodb_pol
   role       = aws_iam_role.market_financials_role.name
   policy_arn = aws_iam_policy.market_financials_dynamodb_access_policy.arn
 }
+
+resource "aws_iam_role_policy_attachment" "market_financials_basic_execution" {
+  role       = aws_iam_role.market_financials_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
