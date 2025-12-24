@@ -1,47 +1,5 @@
-resource "aws_ecr_repository" "market_financials" {
-  name = "market-financials"
-  image_tag_mutability = "MUTABLE"
-  force_delete = true
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-
-  tags = {
-    project = "market-financials"
-  }
-}
-
-resource "aws_lambda_function" "market_financials_function" {
-  function_name = "market_financials_function"
-  package_type = "Image"
-  image_uri = "${aws_ecr_repository.market_financials.repository_url}:latest"
-  role = aws_iam_role.market_financials_role.arn
-  memory_size = 512
-  timeout = 30
-
-  architectures = [ "x86_64" ]
-  
-  lifecycle {
-    ignore_changes = [ image_uri ]
-  }
-
-  tags = {
-    project = "market-financials"
-  }
-}
-
-resource "aws_cloudwatch_log_group" "market_financials_cloudwatch" {
-  name              = "/aws/lambda/${aws_lambda_function.market_financials_function.function_name}"
-  retention_in_days = 7
-
-  tags = {
-    project = "market-financials"
-  }
-}
-
 resource "aws_apigatewayv2_api" "market_financials_gw" {
-  name = "market_financials_gw"
+  name = "MarketFinancialsGW"
   protocol_type = "HTTP"
 
   tags = {
@@ -89,4 +47,21 @@ resource "aws_apigatewayv2_route" "market_financials_gw_route" {
   
   route_key = "POST /market-financials"
   target = "integrations/${aws_apigatewayv2_integration.market_financials_gw_integration.id}"
+
+  authorization_type = "CUSTOM"
+  authorizer_id = aws_apigatewayv2_authorizer.auth.id
+
+  depends_on = [ aws_apigatewayv2_authorizer.auth ]
+}
+
+resource "aws_apigatewayv2_authorizer" "auth" {
+  name = "MarketFinancailsAuthorizer"
+  api_id = aws_apigatewayv2_api.market_financials_gw.id
+
+  authorizer_type = "REQUEST"
+  authorizer_uri = aws_lambda_function.market_financials_auth_function.invoke_arn
+  identity_sources = [ "$request.header.Authorization" ]
+
+  authorizer_payload_format_version = "2.0"
+  enable_simple_responses = true
 }
