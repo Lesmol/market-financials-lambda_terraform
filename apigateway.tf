@@ -60,7 +60,7 @@ resource "aws_apigatewayv2_authorizer" "auth" {
 
   authorizer_type = "REQUEST"
   authorizer_uri = aws_lambda_function.market_financials_auth_function.invoke_arn
-  identity_sources = [ "$request.header.Authorization" ]
+  identity_sources = [ "$request.header.x-api-key" ]
 
   authorizer_payload_format_version = "2.0"
   enable_simple_responses = true
