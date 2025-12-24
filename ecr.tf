@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "market_financials" {
-  name = "market_inancials"
+  name = "market-financials"
   image_tag_mutability = "MUTABLE"
   force_delete = true
 
@@ -13,7 +13,7 @@ resource "aws_ecr_repository" "market_financials" {
 }
 
 resource "aws_ecr_repository" "market_financials_authorizer" {
-  name = "market_financials_auth"
+  name = "market-financials-auth"
   image_tag_mutability = "MUTABLE"
   force_delete = true
 
