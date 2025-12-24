@@ -18,7 +18,7 @@ resource "aws_ecr_lifecycle_policy" "market_financials_lifecycle_policy" {
 }
 
 resource "aws_ecr_lifecycle_policy" "market_financials_auth_lifecycle_policy" {
-  repository = aws_ecr_repository.market_financials_authorizer
+  repository = aws_ecr_repository.market_financials_authorizer.name
 
   policy = jsonencode({
     rules = [{
