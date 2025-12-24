@@ -7,32 +7,32 @@ resource "aws_apigatewayv2_api" "market_financials_gw" {
   }
 }
 
-resource "aws_apigatewayv2_stage" "market_financials_gw_stage" {
-  api_id = aws_apigatewayv2_api.market_financials_gw.id
-  name = "prod"
-  auto_deploy = true
+# resource "aws_apigatewayv2_stage" "market_financials_gw_stage" {
+#   api_id = aws_apigatewayv2_api.market_financials_gw.id
+#   name = "prod"
+#   auto_deploy = true
 
-  access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.market_financials_cloudwatch.arn
-    format = jsonencode({
-      requestId               = "$context.requestId"
-      sourceIp                = "$context.identity.sourceIp"
-      requestTime             = "$context.requestTime"
-      protocol                = "$context.protocol"
-      httpMethod              = "$context.httpMethod"
-      resourcePath            = "$context.resourcePath"
-      routeKey                = "$context.routeKey"
-      status                  = "$context.status"
-      responseLength          = "$context.responseLength"
-      integrationErrorMessage = "$context.integrationErrorMessage"
-      }
-    )
-  }
+#   access_log_settings {
+#     destination_arn = aws_cloudwatch_log_group.market_financials_cloudwatch.arn
+#     format = jsonencode({
+#       requestId               = "$context.requestId"
+#       sourceIp                = "$context.identity.sourceIp"
+#       requestTime             = "$context.requestTime"
+#       protocol                = "$context.protocol"
+#       httpMethod              = "$context.httpMethod"
+#       resourcePath            = "$context.resourcePath"
+#       routeKey                = "$context.routeKey"
+#       status                  = "$context.status"
+#       responseLength          = "$context.responseLength"
+#       integrationErrorMessage = "$context.integrationErrorMessage"
+#       }
+#     )
+#   }
 
-  tags = {
-    project = "market-financials"
-  }
-}
+#   tags = {
+#     project = "market-financials"
+#   }
+# }
 
 # resource "aws_apigatewayv2_integration" "market_financials_gw_integration" {
 #   api_id = aws_apigatewayv2_api.market_financials_gw.id
@@ -42,15 +42,15 @@ resource "aws_apigatewayv2_stage" "market_financials_gw_stage" {
 #   integration_method = "POST"
 # }
 
-resource "aws_apigatewayv2_route" "market_financials_gw_route" {
-  api_id = aws_apigatewayv2_api.market_financials_gw.id
+# resource "aws_apigatewayv2_route" "market_financials_gw_route" {
+#   api_id = aws_apigatewayv2_api.market_financials_gw.id
   
-  route_key = "POST /market-financials"
-  target = "integrations/${aws_apigatewayv2_integration.market_financials_gw_integration.id}"
+#   route_key = "POST /market-financials"
+#   target = "integrations/${aws_apigatewayv2_integration.market_financials_gw_integration.id}"
 
-  # authorization_type = "CUSTOM"
-  # authorizer_id = aws_apigatewayv2_authorizer.auth.id
-}
+#   # authorization_type = "CUSTOM"
+#   # authorizer_id = aws_apigatewayv2_authorizer.auth.id
+# }
 
 # resource "aws_apigatewayv2_authorizer" "auth" {
 #   name = "MarketFinancailsAuthorizer"
