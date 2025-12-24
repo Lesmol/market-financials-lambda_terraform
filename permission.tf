@@ -17,24 +17,24 @@ resource "aws_ecr_lifecycle_policy" "market_financials_lifecycle_policy" {
   })
 }
 
-# resource "aws_ecr_lifecycle_policy" "market_financials_auth_lifecycle_policy" {
-#   repository = aws_ecr_repository.market_financials_authorizer
+resource "aws_ecr_lifecycle_policy" "market_financials_auth_lifecycle_policy" {
+  repository = aws_ecr_repository.market_financials_authorizer
 
-#   policy = jsonencode({
-#     rules = [{
-#       rulePriority = 1
-#       description  = "Keep last 5 images"
-#       selection = {
-#         tagStatus   = "any"
-#         countType   = "imageCountMoreThan"
-#         countNumber = 5
-#       }
-#       action = {
-#         type = "expire"
-#       }
-#     }]
-#   })
-# }
+  policy = jsonencode({
+    rules = [{
+      rulePriority = 1
+      description  = "Keep last 5 images"
+      selection = {
+        tagStatus   = "any"
+        countType   = "imageCountMoreThan"
+        countNumber = 5
+      }
+      action = {
+        type = "expire"
+      }
+    }]
+  })
+}
 
 resource "aws_iam_role" "market_financials_role" {
   name = "MarketFinancialsRole"
@@ -55,23 +55,23 @@ resource "aws_iam_role" "market_financials_role" {
   }
 }
 
-# resource "aws_lambda_permission" "market_financials_function_permission" {
-#   statement_id = "AllowExecutionFromAPIGateway"
-#   action = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.market_financials_function.function_name
-#   principal = "apigateway.amazonaws.com"
+resource "aws_lambda_permission" "market_financials_function_permission" {
+  statement_id = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.market_financials_function.function_name
+  principal = "apigateway.amazonaws.com"
 
-#   source_arn = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/*/*"
-# }
+  source_arn = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/*/*"
+}
 
-# resource "aws_lambda_permission" "auth_invoke_permission" {
-#   statement_id  = "AllowExecutionFromAPIGatewayAuthorizer"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.market_financials_auth_function.function_name
-#   principal     = "apigateway.amazonaws.com"
+resource "aws_lambda_permission" "auth_invoke_permission" {
+  statement_id  = "AllowExecutionFromAPIGatewayAuthorizer"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.market_financials_auth_function.function_name
+  principal     = "apigateway.amazonaws.com"
   
-#   source_arn    = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/authorizers/${aws_apigatewayv2_authorizer.auth.id}"
-# }
+  source_arn    = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/authorizers/${aws_apigatewayv2_authorizer.auth.id}"
+}
 
 resource "aws_iam_policy" "market_financials_dynamodb_access_policy" {
   name        = "MarketFinancialsDynamodbPolicy"
