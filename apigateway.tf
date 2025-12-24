@@ -50,6 +50,8 @@ resource "aws_apigatewayv2_route" "market_financials_gw_route" {
 
   authorization_type = "CUSTOM"
   authorizer_id = aws_apigatewayv2_authorizer.auth.id
+
+  depends_on = [ aws_apigatewayv2_authorizer.auth ]
 }
 
 resource "aws_apigatewayv2_authorizer" "auth" {
