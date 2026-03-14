@@ -56,6 +56,13 @@ resource "aws_lambda_function" "email_api_function" {
     ignore_changes = [ image_uri ]
   }
 
+  environment {
+    variables = {
+      AWS_LWA_REMOVE_BASE_PATH = "/prod"
+      PORT                     = "8080"
+    }
+  }
+
   tags = {
     project = var.email-api-tag
   }
