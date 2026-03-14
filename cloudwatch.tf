@@ -15,3 +15,12 @@ resource "aws_cloudwatch_log_group" "market_financials_auth_cloudwatch" {
     project = "market-financials"
   }
 }
+
+resource "aws_cloudwatch_log_group" "email_api_cloudwatch" {
+  name              = "/aws/lambda/${aws_lambda_function.email_api_function.function_name}"
+  retention_in_days = 7
+
+  tags = {
+    project = var.email-api-tag
+  }
+}
