@@ -56,10 +56,6 @@ resource "aws_lambda_function" "email_api_function" {
     ignore_changes = [ image_uri ]
   }
 
-  snap_start {
-    apply_on = "PublishedVersions"
-  }
-
   tags = {
     project = var.email-api-tag
   }
