@@ -66,22 +66,22 @@ resource "aws_apigatewayv2_authorizer" "auth" {
   enable_simple_responses = true
 }
 
-# resource "aws_apigatewayv2_integration" "email_api_integration" {
-#   api_id           = aws_apigatewayv2_api.market_financials_gw.id
-#   integration_uri  = aws_lambda_function.email_api_function.invoke_arn
-#   integration_type = "AWS_PROXY"
-#   integration_method = "POST"
-#   payload_format_version = "2.0"
-# }
+resource "aws_apigatewayv2_integration" "email_api_integration" {
+  api_id           = aws_apigatewayv2_api.market_financials_gw.id
+  integration_uri  = aws_lambda_function.email_api_function.invoke_arn
+  integration_type = "AWS_PROXY"
+  integration_method = "POST"
+  payload_format_version = "2.0"
+}
 
-# resource "aws_apigatewayv2_route" "email_api_route" {
-#   api_id    = aws_apigatewayv2_api.market_financials_gw.id
+resource "aws_apigatewayv2_route" "email_api_route" {
+  api_id    = aws_apigatewayv2_api.market_financials_gw.id
 
-#   route_key = "POST /send-market-update"
-#   target    = "integrations/${aws_apigatewayv2_integration.email_api_integration.id}"
+  route_key = "POST /send-market-update"
+  target    = "integrations/${aws_apigatewayv2_integration.email_api_integration.id}"
 
-#   authorization_type = "CUSTOM"
-#   authorizer_id = aws_apigatewayv2_authorizer.auth.id
+  authorization_type = "CUSTOM"
+  authorizer_id = aws_apigatewayv2_authorizer.auth.id
 
-#   depends_on = [ aws_apigatewayv2_authorizer.auth ]
-# }
+  depends_on = [ aws_apigatewayv2_authorizer.auth ]
+}
