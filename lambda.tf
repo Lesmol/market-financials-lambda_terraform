@@ -41,3 +41,26 @@ resource "aws_lambda_function" "market_financials_auth_function" {
     project = "market-financials"
   }
 }
+
+# resource "aws_lambda_function" "email_api_function" {
+#   function_name = "email_api_function"
+#   package_type  = "Image"
+#   image_uri     = "${aws_ecr_repository.email_api.repository_url}:latest"
+#   role          = aws_iam_role.email_api_role.arn
+#   memory_size   = 2048
+#   timeout       = 50
+
+#   architectures = [ "x86_64" ]
+
+#   lifecycle {
+#     ignore_changes = [ image_uri ]
+#   }
+
+#   snap_start {
+#     apply_on = "PublishedVersions"
+#   }
+
+#   tags = {
+#     project = var.email-api-tag
+#   }
+# }
