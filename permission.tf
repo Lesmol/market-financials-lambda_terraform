@@ -123,13 +123,13 @@ resource "aws_iam_role_policy_attachment" "market_financials_basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# resource "aws_lambda_permission" "email_api_permission" {
-#   statement_id  = "AllowExecutionFromAPIGateway"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.email_api_function.function_name
-#   principal     = "apigateway.amazonaws.com"
-#   source_arn    = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/*/*"
-# }
+resource "aws_lambda_permission" "email_api_permission" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.email_api_function.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.market_financials_gw.execution_arn}/*/*"
+}
 
 resource "aws_iam_policy" "ses_access_policy" {
   name = "EmailApiSesAccess"
