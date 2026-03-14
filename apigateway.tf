@@ -77,7 +77,7 @@ resource "aws_apigatewayv2_integration" "email_api_integration" {
 resource "aws_apigatewayv2_route" "email_api_route" {
   api_id    = aws_apigatewayv2_api.market_financials_gw.id
 
-  route_key = "POST /{proxy+}"
+  route_key = "ANY /{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.email_api_integration.id}"
 
   authorization_type = "CUSTOM"
